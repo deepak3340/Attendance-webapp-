@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - संस्कार हाई स्कूल, गरोडा</title>
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="school-badge-icon">
+          <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+          </svg>
+        </div>
+        <h1 class="school-name">संस्कार हाई स्कूल, गरोडा</h1>
+        <p class="app-subtitle">Attendance Management System</p>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="identifier">Mobile Number, Email or UID</label>
+          <input 
+            type="text" 
+            id="identifier" 
+            class="form-control" 
+            placeholder="Enter UID, Mobile Number, or Email" 
+            required 
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-with-icon">
+            <input 
+              type="password" 
+              id="password" 
+              class="form-control" 
+              placeholder="Enter your password" 
+              required 
+              autocomplete="current-password"
+            />
+            <button type="button" class="input-icon-btn btn-toggle-password" data-target="password" title="Show/Hide Password">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-options">
+          <a href="/forgot-password" class="btn-forgot-password">Forgot Password?</a>
+        </div>
+
+        <button type="submit" id="btnLoginSubmit" class="btn btn-primary btn-auth-submit">
+          LOGIN
+        </button>
+      </form>
+
+      <div class="auth-footer-notice">
+        Institutional system for authorized school personnel only.
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initLoginPage();
+    });
+  </script>
+</body>
+</html>

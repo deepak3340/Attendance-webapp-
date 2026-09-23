@@ -1,0 +1,220 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user profile and role information. Document ID is Firebase Authentication UID.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "mobileNumber": { "type": "string" },
+        "role": { "type": "string", "enum": ["principal", "teacher"] },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "name", "mobileNumber", "role", "status", "createdAt", "updatedAt"]
+    },
+    "Teacher": {
+      "title": "Teacher",
+      "description": "Teacher profile and teacher-specific information. Document ID is Firebase Authentication UID.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "teacherUid": { "type": "string" },
+        "name": { "type": "string" },
+        "mobileNumber": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "teacherUid", "name", "mobileNumber", "status", "createdAt", "updatedAt"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "School student records. Students do not login and have no authentication accounts.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string" },
+        "name": { "type": "string" },
+        "rollNumber": { "type": "string" },
+        "classId": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["studentId", "name", "rollNumber", "classId", "status", "createdAt", "updatedAt"]
+    },
+    "Class": {
+      "title": "Class",
+      "description": "Principal created and managed school classes.",
+      "type": "object",
+      "properties": {
+        "classId": { "type": "string" },
+        "className": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["classId", "className", "status", "createdAt", "updatedAt"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "Curricular subjects belonging to a specific class.",
+      "type": "object",
+      "properties": {
+        "subjectId": { "type": "string" },
+        "subjectName": { "type": "string" },
+        "classId": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["subjectId", "subjectName", "classId", "status", "createdAt", "updatedAt"]
+    },
+    "TeacherAssignment": {
+      "title": "TeacherAssignment",
+      "description": "Connects teachers with authorized classes and subjects.",
+      "type": "object",
+      "properties": {
+        "assignmentId": { "type": "string" },
+        "teacherUid": { "type": "string" },
+        "classId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["assignmentId", "teacherUid", "classId", "subjectId", "status", "createdAt", "updatedAt"]
+    },
+    "AttendanceSession": {
+      "title": "AttendanceSession",
+      "description": "Attendance session management with deterministic ID YYYY-MM-DD_classId_subjectId_period for Principal lock/unlock.",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string" },
+        "date": { "type": "string" },
+        "classId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "period": { "type": "string" },
+        "teacherUid": { "type": "string" },
+        "locked": { "type": "boolean" },
+        "lockedBy": { "type": "string" },
+        "lockedAt": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["sessionId", "date", "classId", "subjectId", "period", "teacherUid", "locked", "createdAt", "updatedAt"]
+    },
+    "StudentAttendance": {
+      "title": "StudentAttendance",
+      "description": "Individual student attendance records with unique deterministic ID sessionId_studentId.",
+      "type": "object",
+      "properties": {
+        "attendanceId": { "type": "string" },
+        "sessionId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "classId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "teacherUid": { "type": "string" },
+        "date": { "type": "string" },
+        "period": { "type": "string" },
+        "status": { "type": "string", "enum": ["Present", "Absent"] },
+        "markedBy": { "type": "string" },
+        "markedAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["attendanceId", "sessionId", "studentId", "classId", "subjectId", "teacherUid", "date", "period", "status", "markedBy", "markedAt", "updatedAt"]
+    },
+    "TeacherAttendance": {
+      "title": "TeacherAttendance",
+      "description": "Faculty attendance records marked exclusively by Principal.",
+      "type": "object",
+      "properties": {
+        "attendanceId": { "type": "string" },
+        "teacherUid": { "type": "string" },
+        "date": { "type": "string" },
+        "status": { "type": "string", "enum": ["Present", "Absent"] },
+        "markedBy": { "type": "string" },
+        "markedAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["attendanceId", "teacherUid", "date", "status", "markedBy", "markedAt", "updatedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable administrative and operation trail. Never stores passwords or OTPs.",
+      "type": "object",
+      "properties": {
+        "logId": { "type": "string" },
+        "action": { "type": "string" },
+        "performedBy": { "type": "string" },
+        "role": { "type": "string" },
+        "targetType": { "type": "string" },
+        "targetId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "details": { "type": "object" }
+      },
+      "required": ["logId", "action", "performedBy", "role", "targetType", "targetId", "timestamp"]
+    },
+    "SchoolSettings": {
+      "title": "SchoolSettings",
+      "description": "Single-school configuration document (schoolSettings/school).",
+      "type": "object",
+      "properties": {
+        "schoolName": { "type": "string" },
+        "schoolAddress": { "type": "string" },
+        "principalUid": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["schoolName", "principalUid", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles with role-based access."
+    },
+    "/teachers/{teacherId}": {
+      "schema": "Teacher",
+      "description": "Teacher faculty records indexed by Firebase Auth UID."
+    },
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Enrolled student records."
+    },
+    "/classes/{classId}": {
+      "schema": "Class",
+      "description": "Classes created and managed by Principal."
+    },
+    "/subjects/{subjectId}": {
+      "schema": "Subject",
+      "description": "Subjects associated with specific classes."
+    },
+    "/teacherAssignments/{assignmentId}": {
+      "schema": "TeacherAssignment",
+      "description": "Teacher to class and subject assignment mapping."
+    },
+    "/attendanceSessions/{sessionId}": {
+      "schema": "AttendanceSession",
+      "description": "Session tracking with Principal lock/unlock state."
+    },
+    "/studentAttendance/{attendanceId}": {
+      "schema": "StudentAttendance",
+      "description": "Student attendance entries with sessionId_studentId key."
+    },
+    "/teacherAttendance/{attendanceId}": {
+      "schema": "TeacherAttendance",
+      "description": "Teacher attendance marked exclusively by Principal."
+    },
+    "/auditLogs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Immutable system audit trail."
+    },
+    "/schoolSettings/{settingsId}": {
+      "schema": "SchoolSettings",
+      "description": "Single-school configuration singleton (document 'school')."
+    }
+  }
+}

@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isPrincipal() {
+      return isAuthenticated() && (
+        !exists(/databases/$(database)/documents/users/$(request.auth.uid)) ||
+        getUserDoc().role == 'principal'
+      );
+    }
+
+    function isTeacher() {
+      return isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && getUserDoc().role == 'teacher';
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && (request.auth.uid == userId || isPrincipal());
+      allow delete: if false;
+    }
+
+    // Teachers
+    match /teachers/{teacherId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Students
+    match /students/{studentId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Classes
+    match /classes/{classId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Subjects
+    match /subjects/{subjectId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Teacher assignments
+    match /teacherAssignments/{assignmentId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Student attendance
+    match /studentAttendance/{attendanceId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && (
+        isPrincipal() || (
+          isTeacher() &&
+          (!exists(/databases/$(database)/documents/attendanceLocks/$(request.resource.data.date + '_' + request.resource.data.classId + '_' + request.resource.data.subjectId + '_' + request.resource.data.period)) ||
+           get(/databases/$(database)/documents/attendanceLocks/$(request.resource.data.date + '_' + request.resource.data.classId + '_' + request.resource.data.subjectId + '_' + request.resource.data.period)).data.locked == false)
+        )
+      );
+      allow delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // Attendance locks
+    match /attendanceLocks/{lockId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Teacher attendance
+    match /teacherAttendance/{attendanceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Audit logs
+    match /auditLogs/{logId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+  }
+}

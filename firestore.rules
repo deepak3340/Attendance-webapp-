@@ -1,0 +1,131 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isPrincipal() {
+      return isAuthenticated() && (
+        !exists(/databases/$(database)/documents/users/$(request.auth.uid)) ||
+        getUserDoc().role == 'principal'
+      );
+    }
+
+    function isTeacher() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+             getUserDoc().role == 'teacher';
+    }
+
+    function isSessionLocked(sessionId) {
+      return exists(/databases/$(database)/documents/attendanceSessions/$(sessionId)) &&
+             get(/databases/$(database)/documents/attendanceSessions/$(sessionId)).data.locked == true;
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && (request.auth.uid == userId || isPrincipal());
+      allow delete: if false;
+    }
+
+    // 2. Teachers collection (Principal manages; Teacher views own)
+    match /teachers/{teacherId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // 3. Students collection (Principal manages; Teachers view)
+    match /students/{studentId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // 4. Classes collection (Principal manages; Teachers view)
+    match /classes/{classId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // 5. Subjects collection (Principal manages; Teachers view)
+    match /subjects/{subjectId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // 6. Teacher Assignments (Principal manages; Teachers view)
+    match /teacherAssignments/{assignmentId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // 7. Attendance Sessions (Principal locks/unlocks; Teachers view & can create initial session)
+    match /attendanceSessions/{sessionId} {
+      allow read: if isAuthenticated();
+      // Principal can lock/unlock/manage sessions
+      allow write: if isAuthenticated() && isPrincipal();
+      // Teacher can create session record when marking attendance if not locked
+      allow create: if isAuthenticated() && isTeacher() && request.resource.data.locked == false;
+      allow update: if isAuthenticated() && isTeacher() && 
+                    !isSessionLocked(sessionId) && 
+                    request.resource.data.locked == resource.data.locked;
+    }
+
+    // 8. Student Attendance (Teacher marks if assigned & unlocked; Principal can view & manage)
+    match /studentAttendance/{attendanceId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && (
+        isPrincipal() || (
+          isTeacher() && 
+          !isSessionLocked(request.resource.data.sessionId)
+        )
+      );
+      allow update: if isAuthenticated() && (
+        isPrincipal() || (
+          isTeacher() && 
+          !isSessionLocked(resource.data.sessionId) &&
+          !isSessionLocked(request.resource.data.sessionId)
+        )
+      );
+      allow delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // Backward compatibility for legacy attendance collection
+    match /attendance/{attendanceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isPrincipal();
+    }
+
+    // Backward compatibility for legacy attendanceLocks collection
+    match /attendanceLocks/{lockId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isPrincipal();
+    }
+
+    // 9. Teacher Attendance (Principal marks; Teachers can view their own)
+    match /teacherAttendance/{attendanceId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && isPrincipal();
+    }
+
+    // 10. Audit Logs (Append-only by authenticated backend/users, cannot be modified or deleted)
+    match /auditLogs/{logId} {
+      allow read: if isAuthenticated() && isPrincipal();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
+    // 11. School Settings (Readable by authenticated staff; Principal manages)
+    match /schoolSettings/{settingsId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && isPrincipal();
+    }
+  }
+}

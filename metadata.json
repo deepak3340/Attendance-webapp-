@@ -1,0 +1,6 @@
+{
+  "name": "Single-School Attendance Management System",
+  "description": "Production-grade attendance management system for single schools with Principal and Teacher roles, biometric/SMS OTP forgot password, dynamic class-subject assignment, locked attendance sessions, audit logging, and openpyxl Excel reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Greenwood Academy - Attendance Management System</title>
+  <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0F172A;">
+  <div style="text-align:center;color:#fff;">
+    <div class="spinner" style="margin:0 auto 1rem;width:2rem;height:2rem;border-width:3px;"></div>
+    <p style="color:#94A3B8;font-size:0.95rem;">Verifying session and routing to portal...</p>
+  </div>
+
+  <script src="/static/js/api.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = API.getStoredUser();
+      if (user && user.role === "principal") {
+        window.location.replace("/principal");
+      } else if (user && user.role === "teacher") {
+        window.location.replace("/teacher");
+      } else {
+        window.location.replace("/login");
+      }
+    });
+  </script>
+</body>
+</html>

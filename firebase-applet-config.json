@@ -1,0 +1,10 @@
+{
+  "projectId": "attendance-web-app01",
+  "appId": "1:63994119771:web:c2e7776a62e5b00d19a17e",
+  "apiKey": "AIzaSyDduuV3-Z257xDEWv4W6Ya6UmbhPLZ7etk",
+  "authDomain": "attendance-web-app01.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "attendance-web-app01.firebasestorage.app",
+  "messagingSenderId": "63994119771",
+  "measurementId": "G-DJ3E49BBM1"
+}

@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Principal Portal - संस्कार हाई स्कूल, गरोडा</title>
+  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">SH</div>
+        <div class="brand-info">
+          <div class="brand-title" id="sidebarSchoolName">संस्कार हाई स्कूल, गरोडा</div>
+          <div class="brand-badge">Principal Portal</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-view="dashboardView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-view="studentsView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <span>Students</span>
+        </div>
+        <div class="nav-item" data-view="teachersView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>Teachers</span>
+        </div>
+        <div class="nav-item" data-view="classesSubjectsView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          <span>Classes & Subjects</span>
+        </div>
+        <div class="nav-item" data-view="assignClassesView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+          <span>Assign Classes</span>
+        </div>
+        <div class="nav-item" data-view="studentAttendanceView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Student Attendance</span>
+        </div>
+        <div class="nav-item" data-view="teacherAttendanceView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>Teacher Attendance</span>
+        </div>
+        <div class="nav-item" data-view="reportsView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Excel Reports</span>
+        </div>
+        <div class="nav-item" data-view="profileView">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <span>My Profile</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-mini-profile">
+          <div class="user-mini-name" id="userDisplayName">Principal</div>
+          <div class="user-mini-role" id="userRoleDisplay">Administrator</div>
+        </div>
+        <button class="btn-logout-icon btn-logout" title="Sign Out">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-menu-toggle" id="btnMenuToggle" aria-label="Toggle menu">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div class="page-title-box">
+            <span class="page-title">Institution Management System</span>
+            <span class="page-breadcrumb">संस्कार हाई स्कूल, गरोडा &bull; Single-School Central Database</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="btn btn-secondary btn-sm btn-logout">Sign Out</button>
+        </div>
+      </header>
+
+      <main class="content-area">
+        <!-- ================= VIEW 1: DASHBOARD ================= -->
+        <div id="dashboardView" class="view-panel">
+          <div class="view-header">
+            <div>
+              <h2>School Overview</h2>
+              <p>Real-time enrollment, staff metrics, and daily attendance.</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Total Students</div>
+                <div class="stat-value" id="statTotalStudents">0</div>
+                <div class="stat-sub">Active enrolled records</div>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-teal">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Total Teachers</div>
+                <div class="stat-value" id="statTotalTeachers">0</div>
+                <div class="stat-sub">Active faculty members</div>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-blue">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Total Classes</div>
+                <div class="stat-value" id="statTotalClasses">0</div>
+                <div class="stat-sub">Configured grades</div>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-amber">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Student Attendance</div>
+                <div class="stat-value" id="statTodayStudentAtt">0/0</div>
+                <div class="stat-sub" id="statTodayStudentAttSub">0% Present today</div>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-emerald">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-info">
+                <div class="stat-label">Teacher Attendance</div>
+                <div class="stat-value" id="statTodayTeacherAtt">0/0</div>
+                <div class="stat-sub" id="statTodayTeacherAttSub">Marked by Principal</div>
+              </div>
+              <div class="stat-icon-wrapper stat-icon-teal">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Audits Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3>System Activity & Audit Logs</h3>
+              <span class="badge badge-neutral">Immutable Audit Trail</span>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>Performed By</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="recentAuditLogsList">
+                  <tr><td colspan="4" class="text-center" style="padding:1.5rem;">Loading activity logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 2: STUDENTS ================= -->
+        <div id="studentsView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Student Management</h2>
+                <p>Manage student records, roll numbers, and class enrollments.</p>
+              </div>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary" onclick="PrincipalApp.openAddStudentModal()">+ Add New Student</button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-item">
+              <label class="form-label">Search Name</label>
+              <input type="text" id="searchStudentName" class="form-control" placeholder="Search by student name..." />
+            </div>
+            <div class="filter-item filter-item-sm">
+              <label class="form-label">Roll Number</label>
+              <input type="text" id="searchStudentRoll" class="form-control" placeholder="e.g. 1" />
+            </div>
+            <div class="filter-item">
+              <label class="form-label">Class</label>
+              <select id="filterStudentClass" class="form-control class-select-dropdown">
+                <option value="">All Classes</option>
+              </select>
+            </div>
+            <div class="filter-item filter-item-sm">
+              <label class="form-label">Status</label>
+              <select id="filterStudentStatus" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-primary btn-sm" onclick="PrincipalApp.loadStudents()">Filter</button>
+              <button class="btn btn-secondary btn-sm" onclick="document.getElementById('searchStudentName').value='';document.getElementById('searchStudentRoll').value='';document.getElementById('filterStudentClass').value='';document.getElementById('filterStudentStatus').value='';PrincipalApp.loadStudents();">Reset</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Student Name</th>
+                  <th>Student ID</th>
+                  <th>Class</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <tr><td colspan="7" class="text-center" style="padding:2rem;">Loading student records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 3: TEACHERS ================= -->
+        <div id="teachersView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Teacher Management</h2>
+                <p>Register faculty members, generate unique 6-digit UIDs, and configure credentials.</p>
+              </div>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary" onclick="PrincipalApp.openAddTeacherModal()">+ Add New Teacher</button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-item">
+              <label class="form-label">Search Teacher</label>
+              <input type="text" id="searchTeacherQuery" class="form-control" placeholder="Search by name, 6-digit UID, or mobile..." />
+            </div>
+            <div class="filter-item filter-item-sm">
+              <label class="form-label">Status</label>
+              <select id="filterTeacherStatus" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-primary btn-sm" onclick="PrincipalApp.loadTeachers()">Filter</button>
+              <button class="btn btn-secondary btn-sm" onclick="document.getElementById('searchTeacherQuery').value='';document.getElementById('filterTeacherStatus').value='';PrincipalApp.loadTeachers();">Reset</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Teacher UID</th>
+                  <th>Name</th>
+                  <th>Mobile Number</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teachersTableBody">
+                <tr><td colspan="6" class="text-center" style="padding:2rem;">Loading faculty records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 4: CLASSES & SUBJECTS ================= -->
+        <div id="classesSubjectsView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Classes & Subjects</h2>
+                <p>Configure classes and assign specific subject curricula per class.</p>
+              </div>
+            </div>
+            <div class="view-header-actions">
+              <button class="btn btn-primary" onclick="PrincipalApp.openAddClassModal()">+ Add New Class</button>
+            </div>
+          </div>
+
+          <div id="classesSubjectsContainer">
+            <div style="text-align:center;padding:2rem;">Loading classes...</div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 5: ASSIGN CLASSES & SUBJECTS ================= -->
+        <div id="assignClassesView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Assign Classes & Subjects</h2>
+                <p>Map teachers to specific class and subject pairings.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-header">
+              <h3>Create Faculty Assignment</h3>
+            </div>
+            <form id="createAssignmentForm" onsubmit="PrincipalApp.handleCreateAssignmentSubmit(event)">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1rem;margin-bottom:1.25rem;">
+                <div class="form-group">
+                  <label class="form-label">Select Teacher</label>
+                  <select id="asgnTeacher" class="form-control teacher-select-dropdown" required>
+                    <option value="">-- Select Teacher --</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Select Class</label>
+                  <select id="asgnClass" class="form-control class-select-dropdown" required onchange="PrincipalApp.handleAssignmentClassChange('asgnClass', 'asgnSubject')">
+                    <option value="">-- Select Class --</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Select Subject (Dynamic)</label>
+                  <select id="asgnSubject" class="form-control" required disabled>
+                    <option value="">-- First Select Class --</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">+ Assign Teacher to Subject</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Current Faculty Assignments</h3>
+            </div>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Teacher</th>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="assignmentsTableBody">
+                  <tr><td colspan="5" class="text-center" style="padding:2rem;">Loading assignments...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 6: STUDENT ATTENDANCE (VIEW & LOCK) ================= -->
+        <div id="studentAttendanceView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Student Attendance Oversight</h2>
+                <p>Audit class attendance and manage session-level edit locks.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lock Management Card -->
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-header">
+              <h3>Session Lock / Unlock Controls</h3>
+              <div id="sessionLockStatusDisplay"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:1rem;margin-bottom:1rem;">
+              <div class="form-group">
+                <label class="form-label">Class</label>
+                <select id="lockClassSelect" class="form-control class-select-dropdown" onchange="PrincipalApp.handleAssignmentClassChange('lockClassSelect', 'lockSubjectSelect')">
+                  <option value="">-- Select Class --</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Subject</label>
+                <select id="lockSubjectSelect" class="form-control" disabled>
+                  <option value="">-- First Select Class --</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" id="lockDateInput" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Period</label>
+                <select id="lockPeriodSelect" class="form-control">
+                  <option value="Period 1">Period 1</option>
+                  <option value="Period 2">Period 2</option>
+                  <option value="Period 3">Period 3</option>
+                  <option value="Period 4">Period 4</option>
+                  <option value="Period 5">Period 5</option>
+                  <option value="Period 6">Period 6</option>
+                  <option value="Period 7">Period 7</option>
+                  <option value="Period 8">Period 8</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+              <button class="btn btn-secondary btn-sm" onclick="PrincipalApp.handleCheckSessionLock()">Check Lock Status</button>
+              <button class="btn btn-danger btn-sm" id="btnLockAttendance" onclick="PrincipalApp.handleLockAttendance()">
+                🔒 Lock Attendance
+              </button>
+              <button class="btn btn-success btn-sm" id="btnUnlockAttendance" style="display:none;" onclick="PrincipalApp.handleUnlockAttendance()">
+                🔓 Unlock Attendance
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Records -->
+          <div class="filter-bar">
+            <div class="filter-item">
+              <label class="form-label">Class</label>
+              <select id="filterAttClass" class="form-control class-select-dropdown">
+                <option value="">All Classes</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label class="form-label">Date From</label>
+              <input type="date" id="filterAttDateFrom" class="form-control" />
+            </div>
+            <div class="filter-item">
+              <label class="form-label">Date To</label>
+              <input type="date" id="filterAttDateTo" class="form-control" />
+            </div>
+            <div class="filter-item filter-item-sm">
+              <label class="form-label">Status</label>
+              <select id="filterAttStatus" class="form-control">
+                <option value="">All</option>
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label class="form-label">Student Name</label>
+              <input type="text" id="filterAttStudentName" class="form-control" placeholder="Search student name..." />
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-primary btn-sm" onclick="PrincipalApp.loadStudentAttendanceRecords()">Filter</button>
+              <button class="btn btn-secondary btn-sm" onclick="document.getElementById('filterAttClass').value='';document.getElementById('filterAttDateFrom').value='';document.getElementById('filterAttDateTo').value='';document.getElementById('filterAttStatus').value='';document.getElementById('filterAttStudentName').value='';PrincipalApp.loadStudentAttendanceRecords();">Reset</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Period</th>
+                  <th>Roll No</th>
+                  <th>Student Name</th>
+                  <th>Class</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Marked By</th>
+                  <th>Lock</th>
+                </tr>
+              </thead>
+              <tbody id="studentAttendanceTableBody">
+                <tr><td colspan="9" class="text-center" style="padding:2rem;">Loading attendance records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 7: TEACHER ATTENDANCE (PRINCIPAL MARKS) ================= -->
+        <div id="teacherAttendanceView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Teacher Attendance (Principal Only)</h2>
+                <p>Record daily faculty presence and review teacher attendance history.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mark Teacher Attendance Form -->
+          <div class="card" style="margin-bottom:1.5rem;">
+            <div class="card-header">
+              <h3>Record Teacher Attendance</h3>
+            </div>
+            <form id="markTeacherAttendanceForm" onsubmit="PrincipalApp.handleMarkTeacherAttendanceSubmit(event)">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1rem;margin-bottom:1.25rem;">
+                <div class="form-group">
+                  <label class="form-label">Select Teacher</label>
+                  <select id="markTchSelect" class="form-control teacher-select-dropdown" required>
+                    <option value="">-- Select Teacher --</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date (Past dates allowed)</label>
+                  <input type="date" id="markTchDate" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <select id="markTchStatus" class="form-control" required>
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Save Teacher Attendance</button>
+            </form>
+          </div>
+
+          <!-- Filter & Records -->
+          <div class="filter-bar">
+            <div class="filter-item">
+              <label class="form-label">Search Teacher Name</label>
+              <input type="text" id="filterTchAttName" class="form-control" placeholder="Search name..." />
+            </div>
+            <div class="filter-item">
+              <label class="form-label">Date From</label>
+              <input type="date" id="filterTchAttDateFrom" class="form-control" />
+            </div>
+            <div class="filter-item">
+              <label class="form-label">Date To</label>
+              <input type="date" id="filterTchAttDateTo" class="form-control" />
+            </div>
+            <div class="filter-item filter-item-sm">
+              <label class="form-label">Status</label>
+              <select id="filterTchAttStatus" class="form-control">
+                <option value="">All</option>
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+              </select>
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-primary btn-sm" onclick="PrincipalApp.loadTeacherAttendanceRecords()">Filter</button>
+              <button class="btn btn-secondary btn-sm" onclick="document.getElementById('filterTchAttName').value='';document.getElementById('filterTchAttDateFrom').value='';document.getElementById('filterTchAttDateTo').value='';document.getElementById('filterTchAttStatus').value='';PrincipalApp.loadTeacherAttendanceRecords();">Reset</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Teacher UID</th>
+                  <th>Teacher Name</th>
+                  <th>Status</th>
+                  <th>Recorded By</th>
+                </tr>
+              </thead>
+              <tbody id="teacherAttendanceTableBody">
+                <tr><td colspan="5" class="text-center" style="padding:2rem;">Loading teacher attendance records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 8: EXCEL REPORTS ================= -->
+        <div id="reportsView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Excel Attendance Reports</h2>
+                <p>Generate styled Python + OpenPyXL spreadsheets with detailed and summary breakdowns.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:1.5rem;">
+            <!-- Student Report Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Student Attendance Report</h3>
+              </div>
+              <p style="font-size:0.875rem;margin-bottom:1.25rem;">
+                Generates a color-coded spreadsheet with individual attendance and aggregate percentages.
+              </p>
+
+              <div class="form-group">
+                <label class="form-label">Academic Year</label>
+                <select id="reportStudentYear" class="form-control report-year-select">
+                  <option value="2026">2026</option>
+                  <option value="2025">2025</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Month</label>
+                <select id="reportStudentMonth" class="form-control">
+                  <option value="">Full Year Summary</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Class</label>
+                <select id="reportStudentClass" class="form-control class-select-dropdown" onchange="PrincipalApp.handleAssignmentClassChange('reportStudentClass', 'reportStudentSubject')">
+                  <option value="">All Classes</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Subject</label>
+                <select id="reportStudentSubject" class="form-control" disabled>
+                  <option value="">-- First Select Class --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Student</label>
+                <select id="reportStudentSelect" class="form-control">
+                  <option value="">All Students</option>
+                </select>
+              </div>
+
+              <button type="button" id="btnDownloadStudentReport" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" onclick="PrincipalApp.handleDownloadStudentReport()">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download Student Attendance Excel
+              </button>
+            </div>
+
+            <!-- Teacher Report Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Teacher Attendance Report</h3>
+              </div>
+              <p style="font-size:0.875rem;margin-bottom:1.25rem;">
+                Generates a faculty attendance register with marked days, present count, and attendance rates.
+              </p>
+
+              <div class="form-group">
+                <label class="form-label">Academic Year</label>
+                <select id="reportTeacherYear" class="form-control report-year-select">
+                  <option value="2026">2026</option>
+                  <option value="2025">2025</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Month</label>
+                <select id="reportTeacherMonth" class="form-control">
+                  <option value="">Full Year Summary</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Teacher</label>
+                <select id="reportTeacherSelect" class="form-control teacher-select-dropdown">
+                  <option value="">All Teachers</option>
+                </select>
+              </div>
+
+              <button type="button" id="btnDownloadTeacherReport" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" onclick="PrincipalApp.handleDownloadTeacherReport()">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download Teacher Attendance Excel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= VIEW 9: PROFILE ================= -->
+        <div id="profileView" class="view-panel" style="display:none;">
+          <div class="view-header">
+            <div class="view-header-left">
+              <button class="btn btn-back btn-back-dashboard">← Back to Dashboard</button>
+              <div>
+                <h2>Principal Profile</h2>
+                <p>Institutional administrator credentials and security settings.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="max-width:580px;">
+            <div style="display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem;">
+              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg, #0F766E, #14B8A6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;">
+                PR
+              </div>
+              <div>
+                <h3 id="profName">-</h3>
+                <span class="badge badge-primary" id="profRole">Principal</span>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;border-top:1px solid #E2E8F0;padding-top:1rem;">
+              <div>
+                <div style="font-size:0.775rem;color:#64748B;font-weight:600;text-transform:uppercase;">Principal UID</div>
+                <div style="font-weight:700;font-size:1rem;" id="profUid">-</div>
+              </div>
+              <div>
+                <div style="font-size:0.775rem;color:#64748B;font-weight:600;text-transform:uppercase;">Registered Mobile</div>
+                <div style="font-weight:700;font-size:1rem;" id="profMobile">-</div>
+              </div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="PrincipalApp.openChangeMyPasswordModal()">
+              Change My Password
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+  <!-- 1. Add Student Modal -->
+  <div class="modal-overlay" id="addStudentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Add New Student</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="addStudentForm" onsubmit="PrincipalApp.handleAddStudentSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="stuName" class="form-control" placeholder="e.g. Aarav Patel" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Student ID (Unique)</label>
+            <input type="text" id="stuId" class="form-control" placeholder="e.g. STU101" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Class</label>
+            <select id="stuClass" class="form-control class-select-dropdown" required>
+              <option value="">-- Select Class --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Roll Number (Unique within class)</label>
+            <input type="text" id="stuRoll" class="form-control" placeholder="e.g. 1" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="stuStatus" class="form-control">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('addStudentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Edit Student Modal -->
+  <div class="modal-overlay" id="editStudentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Edit Student Record</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="editStudentForm" onsubmit="PrincipalApp.handleEditStudentSubmit(event)">
+        <input type="hidden" id="editStuIdHidden" />
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Student ID</label>
+            <input type="text" id="editStuIdDisplay" class="form-control" disabled />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="editStuName" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Class</label>
+            <select id="editStuClass" class="form-control class-select-dropdown" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Roll Number</label>
+            <input type="text" id="editStuRoll" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="editStuStatus" class="form-control">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('editStudentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Add Teacher Modal -->
+  <div class="modal-overlay" id="addTeacherModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Register Faculty Member</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="addTeacherForm" onsubmit="PrincipalApp.handleAddTeacherSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group" style="background:rgba(99,102,241,0.06);padding:1rem;border-radius:0.75rem;border:1px solid rgba(99,102,241,0.2);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+              <label class="form-label" style="font-weight:700;margin:0;color:var(--text-main);">
+                Teacher UID (System-Generated 6-Digit Code)
+              </label>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="PrincipalApp.regenerateTeacherUID()" style="padding:0.25rem 0.6rem;font-size:0.8rem;">
+                🔄 Generate New
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <input type="text" id="newTeacherCodeDisplay" class="form-control" readonly style="font-size:1.35rem;font-weight:800;letter-spacing:2px;color:#4F46E5;background:#FFFFFF;border:2px solid #6366F1;text-align:center;max-width:200px;" />
+              <span style="font-size:0.8rem;color:var(--text-muted);line-height:1.4;">
+                यह यूनीक 6-अंकों का सिस्टम-जेनरेटेड UID है। टीचर इसी UID और पासवर्ड से लॉगिन कर सकेंगे।
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="tchName" class="form-control" placeholder="e.g. Amit Sharma" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile Number</label>
+            <input type="tel" id="tchMobile" class="form-control" placeholder="e.g. 9812345678" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email (Optional)</label>
+            <input type="email" id="tchEmail" class="form-control" placeholder="e.g. amit.sharma@gmail.com" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Initial Password</label>
+            <input type="password" id="tchPassword" class="form-control" placeholder="Minimum 8 chars with Upper, Lower, Number, Special" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Repeat Password</label>
+            <input type="password" id="tchRepeatPassword" class="form-control" placeholder="Confirm password" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="tchStatus" class="form-control">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('addTeacherModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Teacher Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Edit Teacher Modal -->
+  <div class="modal-overlay" id="editTeacherModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Edit Teacher Record</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="editTeacherForm" onsubmit="PrincipalApp.handleEditTeacherSubmit(event)">
+        <input type="hidden" id="editTchUidHidden" />
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Teacher UID</label>
+            <input type="text" id="editTchCodeDisplay" class="form-control" disabled />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="editTchName" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile Number</label>
+            <input type="tel" id="editTchMobile" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="editTchStatus" class="form-control">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('editTeacherModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Teacher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Admin Change Teacher Password Modal -->
+  <div class="modal-overlay" id="adminChangeTeacherPassModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Administrative Password Reset</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="adminChangePassForm" onsubmit="PrincipalApp.handleAdminChangeTeacherPassSubmit(event)">
+        <input type="hidden" id="adminPassTchUidHidden" />
+        <div class="modal-body">
+          <p style="margin-bottom:1rem;font-size:0.875rem;">
+            Resetting password for: <strong id="adminPassTchNameDisplay">Teacher</strong>
+          </p>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" id="adminNewTchPassword" class="form-control" placeholder="Min 8 chars, uppercase, lowercase, number, special" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" id="adminRepeatTchPassword" class="form-control" placeholder="Repeat new password" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('adminChangeTeacherPassModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Add Class Modal -->
+  <div class="modal-overlay" id="addClassModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Add Class</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="addClassForm" onsubmit="PrincipalApp.handleAddClassSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Class Name</label>
+            <input type="text" id="newClassName" class="form-control" placeholder="e.g. Class 12 Commerce" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('addClassModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Add Subject Modal -->
+  <div class="modal-overlay" id="addSubjectModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Add Subject to Class</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="addSubjectForm" onsubmit="PrincipalApp.handleAddSubjectSubmit(event)">
+        <input type="hidden" id="subClassIdHidden" />
+        <div class="modal-body">
+          <p style="margin-bottom:1rem;font-size:0.875rem;">
+            Adding subject to: <strong id="subClassNameDisplay">Class</strong>
+          </p>
+          <div class="form-group">
+            <label class="form-label">Subject Name</label>
+            <input type="text" id="newSubjectName" class="form-control" placeholder="e.g. Social Science" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('addSubjectModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Subject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. Change My Password Modal -->
+  <div class="modal-overlay" id="changeMyPassModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Change My Password</div>
+        <button type="button" class="modal-close-btn">&times;</button>
+      </div>
+      <form id="changeMyPassForm" onsubmit="PrincipalApp.handleChangeMyPassSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" id="myCurrentPassword" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" id="myNewPassword" class="form-control" placeholder="Min 8 chars, uppercase, lowercase, number, special" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" id="myRepeatPassword" class="form-control" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Modal.close('changeMyPassModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/principal.js"></script>
+</body>
+</html>
