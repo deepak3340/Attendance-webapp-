@@ -1,10 +1,12 @@
 /**
- * Authentication & Firebase Phone Auth OTP Handlers
+ * Authentication & Password Reset Handlers
  */
 
 let firebaseApp = null;
 let recaptchaVerifier = null;
 let confirmationResult = null;
+let verifiedMobileNumber = "";
+let verifiedResetToken = "";
 
 async function initFirebaseClient() {
   if (firebaseApp) return;
@@ -17,7 +19,8 @@ async function initFirebaseClient() {
         projectId: config.projectId,
         storageBucket: config.storageBucket,
         messagingSenderId: config.messagingSenderId,
-        appId: config.appId
+        appId: config.appId,
+        measurementId: config.measurementId
       });
     }
   } catch (err) {
@@ -91,15 +94,20 @@ function initLoginPage() {
 
       const res = await API.post("/api/auth/login", { identifier, password });
       Toast.success("Login successful! Redirecting...");
+      
+      // Store user and verified cryptographic session token
       API.setStoredUser(res.user);
+      if (res.token) {
+        API.setStoredToken(res.token);
+      }
 
       setTimeout(() => {
         if (res.user.role === "principal") {
-          window.location.href = "/principal";
+          window.location.replace("/principal");
         } else {
-          window.location.href = "/teacher";
+          window.location.replace("/teacher");
         }
-      }, 500);
+      }, 400);
     } catch (err) {
       Toast.error(err.message || "Failed to sign in. Please verify your credentials.");
       submitBtn.disabled = false;
@@ -109,9 +117,6 @@ function initLoginPage() {
 }
 
 // ================= FORGOT PASSWORD PHONE OTP HANDLER ================= //
-let verifiedMobileNumber = "";
-let verifiedUid = "";
-
 function initForgotPasswordPage() {
   initFirebaseClient();
   setupPasswordToggles();
@@ -140,38 +145,42 @@ function initForgotPasswordPage() {
       return;
     }
 
-    // Format phone number with country code if missing
-    if (!mobile.startsWith("+")) {
-      mobile = "+91" + mobile.replace(/^0+/, "");
-    }
-
     try {
       btnSend.disabled = true;
       btnSend.innerHTML = `<div class="spinner"></div> Verifying Account...`;
 
-      // 1. Verify on server that account exists
-      const verifyRes = await API.post("/api/auth/verify-phone", { mobileNumber: mobile });
+      // 1. Verify on server and create cryptographic OTP challenge
+      const verifyRes = await API.post("/api/auth/send-otp", { mobileNumber: mobile });
       verifiedMobileNumber = mobile;
 
       document.getElementById("targetPhoneNumberDisplay").textContent = mobile;
       document.getElementById("accountNameDisplay").textContent = verifyRes.account.name;
 
-      // 2. Initialize Firebase reCAPTCHA and trigger Real SMS OTP
-      if (typeof firebase !== "undefined" && firebase.auth) {
-        if (!recaptchaVerifier) {
-          recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
-            size: "invisible",
-            callback: () => {}
-          });
-        }
+      // 2. Client-side Firebase Phone Auth SMS if configured
+      if (typeof firebase !== "undefined" && firebase.auth && firebaseApp) {
         try {
-          confirmationResult = await firebase.auth().signInWithPhoneNumber(mobile, recaptchaVerifier);
-          Toast.success("Real SMS OTP sent to " + mobile);
+          if (!recaptchaVerifier) {
+            recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+              size: "invisible",
+              callback: () => {}
+            });
+          }
+          let formattedPhone = mobile;
+          if (!formattedPhone.startsWith("+")) {
+            formattedPhone = "+91" + formattedPhone.replace(/^0+/, "");
+          }
+          confirmationResult = await firebase.auth().signInWithPhoneNumber(formattedPhone, recaptchaVerifier);
+          Toast.success("SMS OTP sent to " + mobile);
         } catch (fbErr) {
           console.warn("Firebase Phone Auth note:", fbErr);
-          // If SMS quota/service warning, notify user cleanly
-          Toast.info("Verification code requested for " + mobile);
         }
+      }
+
+      // If development hint is provided, inform user
+      if (verifyRes.devOtpHint) {
+        Toast.info(`OTP generated. Code: ${verifyRes.devOtpHint}`);
+      } else {
+        Toast.success("Verification code generated for " + mobile);
       }
 
       // Transition to Step 2
@@ -203,15 +212,26 @@ function initForgotPasswordPage() {
       btnVerify.disabled = true;
       btnVerify.innerHTML = `<div class="spinner"></div> Verifying OTP...`;
 
-      // Validate with Firebase Phone Auth
+      // Try Firebase client confirmation if active
       if (confirmationResult) {
         try {
-          const cred = await confirmationResult.confirm(otp);
-          verifiedUid = cred.user.uid;
+          await confirmationResult.confirm(otp);
         } catch (otpErr) {
-          throw new Error("Invalid or expired SMS OTP. Please try again.");
+          console.warn("Firebase client OTP confirmation note:", otpErr);
         }
       }
+
+      // Authoritative server-side OTP verification
+      const verifyRes = await API.post("/api/auth/verify-otp", {
+        mobileNumber: verifiedMobileNumber,
+        otp
+      });
+
+      if (!verifyRes.resetToken) {
+        throw new Error("Could not obtain password reset authorization.");
+      }
+
+      verifiedResetToken = verifyRes.resetToken;
 
       Toast.success("OTP verified successfully!");
       step2Box.style.display = "none";
@@ -220,7 +240,8 @@ function initForgotPasswordPage() {
       ind3.className = "step-indicator active";
       document.getElementById("newPassword").focus();
     } catch (err) {
-      Toast.error(err.message || "Invalid verification code.");
+      // STOP! Do not advance to step 3 on failure
+      Toast.error(err.message || "Invalid or expired verification code.");
       btnVerify.disabled = false;
       btnVerify.textContent = "VERIFY OTP";
     }
@@ -243,20 +264,24 @@ function initForgotPasswordPage() {
       return;
     }
 
+    if (newPassword.length < 8) {
+      Toast.error("Password must be at least 8 characters long.");
+      return;
+    }
+
     try {
       btnSubmit.disabled = true;
       btnSubmit.innerHTML = `<div class="spinner"></div> Updating Password...`;
 
       await API.post("/api/auth/reset-password", {
-        mobileNumber: verifiedMobileNumber,
+        resetToken: verifiedResetToken,
         newPassword,
-        repeatPassword,
-        verifiedUid
+        repeatPassword
       });
 
       Toast.success("Password reset successfully! Redirecting to login...");
       setTimeout(() => {
-        window.location.href = "/login";
+        window.location.replace("/login");
       }, 1500);
     } catch (err) {
       Toast.error(err.message || "Failed to reset password.");

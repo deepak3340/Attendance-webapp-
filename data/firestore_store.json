@@ -1,310 +1,311 @@
 {
   "users": {
     "375613": {
-      "schoolName": "संस्कार हाई स्कूल, गरोडा",
-      "role": "principal",
-      "schoolLocation": "गरोडा",
-      "name": "दीपक गहलोत",
-      "mobileNumber": "+919826613340",
-      "updatedAt": "2026-09-23T11:42:51.919070Z",
-      "authEmail": "deepak.lohar9826@gmail.com",
-      "createdAt": "2026-09-23T11:28:29.379785Z",
+      "email": "deepak.gehlot982661@gmail.com",
       "status": "active",
-      "email": "deepak.lohar9826@gmail.com",
+      "secondaryEmail": "deepak.lohar9826@gmail.com",
+      "mobileNumber": "+919826613340",
+      "name": "Deepak Gehlot",
+      "createdAt": "2026-09-23T11:28:29.379785Z",
+      "passwordSalt": "b751c3a5ad00517b811685892ec79a74",
+      "passwordHash": "bc7ee36f4273fd9732c4952acdfe17fbd82be032c9f36fe254be4ea782442745d187be92bbe3a21cf921ada849fa00ee13c21f205cd531ed5bae35b2ecf7f2b1",
       "uid": "375613",
+      "updatedAt": "2026-09-23T17:21:06.841Z",
+      "schoolLocation": "Garoda",
+      "schoolName": "Sanskar High School Garoda",
+      "role": "principal",
+      "authEmail": "deepak.gehlot982661@gmail.com",
       "_id": "375613"
     }
   },
   "teachers": {
-    "314289": {
-      "uid": "314289",
-      "teacherUid": "314289",
-      "teacherCode": "314289",
-      "name": "सुरेश कुमार",
-      "mobileNumber": "9811122233",
-      "email": "suresh@test.internal",
-      "status": "active",
-      "createdAt": "2026-09-23T11:49:13.198073Z",
-      "updatedAt": "2026-09-23T11:49:13.198073Z"
+    "_schema": {
+      "active": true,
+      "updatedAt": "2026-09-23T17:07:43.235Z",
+      "description": "Faculty teacher directory and profiles",
+      "_schemaType": "collection_metadata",
+      "createdAt": "2026-09-23T17:07:43.235Z",
+      "_id": "_schema"
     }
   },
-  "students": {},
-  "classes": {},
-  "subjects": {},
-  "teacherAssignments": {},
+  "students": {
+    "_schema": {
+      "createdAt": "2026-09-23T17:07:43.235Z",
+      "description": "Enrolled student master directory",
+      "updatedAt": "2026-09-23T17:07:43.235Z",
+      "active": true,
+      "_schemaType": "collection_metadata",
+      "_id": "_schema"
+    }
+  },
+  "classes": {
+    "_schema": {
+      "active": true,
+      "description": "School classes and grade sections",
+      "_schemaType": "collection_metadata",
+      "createdAt": "2026-09-23T17:07:43.235Z",
+      "updatedAt": "2026-09-23T17:07:43.235Z",
+      "_id": "_schema"
+    }
+  },
+  "subjects": {
+    "_schema": {
+      "updatedAt": "2026-09-23T17:07:43.235Z",
+      "_schemaType": "collection_metadata",
+      "active": true,
+      "createdAt": "2026-09-23T17:07:43.235Z",
+      "description": "Curricular subjects mapped to classes",
+      "_id": "_schema"
+    }
+  },
+  "teacherAssignments": {
+    "_schema": {
+      "active": true,
+      "updatedAt": "2026-09-23T17:07:43.235Z",
+      "_schemaType": "collection_metadata",
+      "description": "Teacher class and subject mappings",
+      "createdAt": "2026-09-23T17:07:43.235Z",
+      "_id": "_schema"
+    }
+  },
   "studentAttendance": {},
   "attendanceLocks": {},
   "teacherAttendance": {},
   "auditLogs": {
-    "log_0cafdeab1568": {
-      "role": "principal",
-      "targetId": "PRIN_DEEPAK",
-      "details": {
-        "message": "Successful login via identifier: 9826613340"
-      },
-      "performedBy": "PRIN_DEEPAK",
-      "targetType": "user",
-      "action": "User Login",
-      "timestamp": "2026-09-23T11:31:42.072624Z",
-      "logId": "log_0cafdeab1568",
-      "_id": "log_0cafdeab1568"
-    },
-    "log_13cd35bd631f": {
-      "targetId": "314289",
-      "performedBy": "PRIN001",
-      "targetType": "teacher",
-      "role": "principal",
-      "logId": "log_13cd35bd631f",
-      "timestamp": "2026-09-23T11:49:14.096167Z",
-      "details": {
-        "message": "Added teacher सुरेश कुमार with unique UID: 314289, Mobile: 9811122233"
-      },
-      "action": "Teacher Created",
-      "_id": "log_13cd35bd631f"
-    },
-    "log_29079d283ee5": {
-      "action": "User Login",
-      "targetId": "PRIN_DEEPAK",
-      "logId": "log_29079d283ee5",
-      "details": {
-        "message": "Successful login via identifier: 9826613340"
-      },
-      "timestamp": "2026-09-23T11:37:29.463041Z",
-      "role": "principal",
-      "targetType": "user",
-      "performedBy": "PRIN_DEEPAK",
-      "_id": "log_29079d283ee5"
-    },
-    "log_3fd9f1bcb95b": {
-      "targetType": "user",
-      "performedBy": "314289",
-      "timestamp": "2026-09-23T11:49:15.772083Z",
-      "targetId": "314289",
-      "action": "User Login",
-      "role": "teacher",
-      "details": {
-        "message": "Successful login via identifier: 314289"
-      },
-      "logId": "log_3fd9f1bcb95b",
-      "_id": "log_3fd9f1bcb95b"
-    },
-    "log_4cc15356a30c": {
-      "details": {
-        "message": "Successful login via identifier: PRIN_DEEPAK"
-      },
-      "targetId": "PRIN_DEEPAK",
-      "action": "User Login",
-      "logId": "log_4cc15356a30c",
-      "targetType": "user",
-      "timestamp": "2026-09-23T11:29:35.917486Z",
-      "role": "principal",
-      "performedBy": "PRIN_DEEPAK",
-      "_id": "log_4cc15356a30c"
-    },
-    "log_59580bf95585": {
-      "timestamp": "2026-09-23T11:30:55.764212Z",
-      "role": "principal",
-      "targetType": "user",
-      "performedBy": "PRIN_DEEPAK",
-      "action": "User Login",
-      "targetId": "PRIN_DEEPAK",
-      "details": {
-        "message": "Successful login via identifier: 9826613340"
-      },
-      "logId": "log_59580bf95585",
-      "_id": "log_59580bf95585"
-    },
-    "log_5f1c04b02db5": {
-      "action": "User Login",
-      "targetType": "user",
-      "details": {
-        "message": "Successful login via identifier: deepak.lohar9826@gmail.com"
-      },
-      "logId": "log_5f1c04b02db5",
-      "role": "principal",
-      "timestamp": "2026-09-23T11:29:35.169158Z",
-      "targetId": "PRIN_DEEPAK",
-      "performedBy": "PRIN_DEEPAK",
-      "_id": "log_5f1c04b02db5"
-    },
-    "log_85a66f3ecd79": {
-      "role": "principal",
-      "targetType": "teacher",
-      "action": "Teacher Created",
-      "timestamp": "2026-09-23T11:48:10.173403Z",
-      "targetId": "user_6cc3ce40479a",
-      "details": {
-        "message": "Added teacher सुरेश कुमार with unique UID: 225876, Mobile: 9811122233"
-      },
-      "logId": "log_85a66f3ecd79",
-      "performedBy": "PRIN001",
-      "_id": "log_85a66f3ecd79"
-    },
-    "log_905bf4f3b927": {
-      "targetId": "375613",
-      "timestamp": "2026-09-23T11:43:22.246766Z",
-      "logId": "log_905bf4f3b927",
-      "role": "principal",
-      "action": "User Login",
-      "performedBy": "375613",
-      "targetType": "user",
-      "details": {
-        "message": "Successful login via identifier: 375613"
-      },
-      "_id": "log_905bf4f3b927"
-    },
-    "log_9c1afc514b20": {
-      "logId": "log_9c1afc514b20",
-      "action": "User Login",
-      "performedBy": "375613",
-      "details": {
-        "message": "Successful login via identifier: 9826613340"
-      },
-      "targetType": "user",
-      "targetId": "375613",
-      "timestamp": "2026-09-23T11:43:24.323201Z",
-      "role": "principal",
-      "_id": "log_9c1afc514b20"
-    },
-    "log_c1f0b0322ffb": {
-      "logId": "log_c1f0b0322ffb",
-      "targetId": "PRIN_DEEPAK",
-      "timestamp": "2026-09-23T11:29:34.258772Z",
-      "details": {
-        "message": "Successful login via identifier: 9826613340"
-      },
-      "action": "User Login",
-      "targetType": "user",
-      "performedBy": "PRIN_DEEPAK",
-      "role": "principal",
-      "_id": "log_c1f0b0322ffb"
-    },
-    "log_ecfc8e3d5445": {
-      "timestamp": "2026-09-23T11:43:26.407378Z",
-      "logId": "log_ecfc8e3d5445",
-      "targetType": "user",
-      "performedBy": "375613",
-      "details": {
-        "message": "Successful login via identifier: deepak.lohar9826@gmail.com"
-      },
-      "targetId": "375613",
-      "role": "principal",
-      "action": "User Login",
-      "_id": "log_ecfc8e3d5445"
-    },
-    "log_init_clean": {
-      "role": "principal",
-      "timestamp": "2026-09-23T11:28:29.379785Z",
-      "performedBy": "PRIN_DEEPAK",
-      "details": {
-        "email": "deepak.lohar9826@gmail.com",
-        "schoolName": "संस्कार हाई स्कूल, गरोडा",
-        "principalName": "दीपक गहलोत",
-        "location": "गरोडा",
-        "mobile": "+919826613340",
-        "message": "Purged all demo records. Initialized real school setup."
-      },
-      "logId": "log_init_clean",
-      "action": "Real School & Principal Initialized",
-      "targetId": "attendance-web-app01",
-      "targetType": "system",
-      "_id": "log_init_clean"
-    },
-    "log_init_system": {
-      "action": "Database Initialized",
-      "details": "Firestore collections initialized for single-school attendance app.",
-      "performedBy": "PRIN001",
-      "logId": "log_init_system",
-      "timestamp": "2026-09-23T11:04:39.052181Z",
-      "role": "principal",
-      "targetId": "attendance-web-app01",
-      "targetType": "system",
-      "_id": "log_init_system"
-    },
-    "log_35f571640db7": {
-      "logId": "log_35f571640db7",
+    "log_2153fc72587c": {
+      "logId": "log_2153fc72587c",
       "action": "User Login",
       "performedBy": "375613",
       "role": "principal",
       "targetType": "user",
       "targetId": "375613",
-      "timestamp": "2026-09-23T11:55:14.641295Z",
+      "timestamp": "2026-09-23T17:07:59.313Z",
       "details": {
-        "message": "Successful login via identifier: 375613"
-      }
+        "message": "Authenticated login for दीपक गहलोत (principal)"
+      },
+      "_id": "log_2153fc72587c"
     },
-    "log_e2342ca7d332": {
-      "logId": "log_e2342ca7d332",
+    "log_4549855addc6": {
+      "logId": "log_4549855addc6",
       "action": "User Login",
       "performedBy": "375613",
       "role": "principal",
       "targetType": "user",
       "targetId": "375613",
-      "timestamp": "2026-09-23T11:55:16.311826Z",
+      "timestamp": "2026-09-23T17:09:03.016Z",
       "details": {
-        "message": "Successful login via identifier: 375613"
-      }
+        "message": "Authenticated login for दीपक गहलोत (principal)"
+      },
+      "_id": "log_4549855addc6"
     },
-    "log_bb65c281afb0": {
-      "logId": "log_bb65c281afb0",
+    "log_9ac4de3f27ed": {
+      "logId": "log_9ac4de3f27ed",
       "action": "User Login",
       "performedBy": "375613",
       "role": "principal",
       "targetType": "user",
       "targetId": "375613",
-      "timestamp": "2026-09-23T11:55:18.397926Z",
+      "timestamp": "2026-09-23T17:18:07.705Z",
       "details": {
-        "message": "Successful login via identifier: 9826613340"
-      }
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_9ac4de3f27ed"
     },
-    "log_b4d85abdc0f1": {
-      "logId": "log_b4d85abdc0f1",
+    "log_da51b26d86d7": {
+      "logId": "log_da51b26d86d7",
       "action": "User Login",
       "performedBy": "375613",
       "role": "principal",
       "targetType": "user",
       "targetId": "375613",
-      "timestamp": "2026-09-23T11:55:20.440019Z",
+      "timestamp": "2026-09-23T17:18:09.472Z",
       "details": {
-        "message": "Successful login via identifier: 9826613340"
-      }
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_da51b26d86d7"
     },
-    "log_5b1b4404313d": {
-      "logId": "log_5b1b4404313d",
+    "log_f46a0e48995d": {
+      "logId": "log_f46a0e48995d",
       "action": "User Login",
       "performedBy": "375613",
       "role": "principal",
       "targetType": "user",
       "targetId": "375613",
-      "timestamp": "2026-09-23T11:55:22.261386Z",
+      "timestamp": "2026-09-23T17:18:10.655Z",
       "details": {
-        "message": "Successful login via identifier: deepak.lohar9826@gmail.com"
-      }
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_f46a0e48995d"
     },
-    "log_f8016bfdaafb": {
-      "logId": "log_f8016bfdaafb",
+    "log_d1c616e83aa6": {
+      "logId": "log_d1c616e83aa6",
       "action": "User Login",
       "performedBy": "375613",
       "role": "principal",
       "targetType": "user",
       "targetId": "375613",
-      "timestamp": "2026-09-23T11:55:24.371567Z",
+      "timestamp": "2026-09-23T17:18:11.800Z",
       "details": {
-        "message": "Successful login via identifier: deepak.lohar9826@gmail.com"
-      }
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_d1c616e83aa6"
+    },
+    "log_4ee96365c14c": {
+      "logId": "log_4ee96365c14c",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:20:46.155Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_4ee96365c14c"
+    },
+    "log_c64b7141d4ab": {
+      "logId": "log_c64b7141d4ab",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:20:47.244Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_c64b7141d4ab"
+    },
+    "log_d02bfb8b4c35": {
+      "logId": "log_d02bfb8b4c35",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:20:48.432Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_d02bfb8b4c35"
+    },
+    "log_3f54882f3716": {
+      "logId": "log_3f54882f3716",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:16.527Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_3f54882f3716"
+    },
+    "log_7a63f9a22cec": {
+      "logId": "log_7a63f9a22cec",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:18.125Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_7a63f9a22cec"
+    },
+    "log_00f13c9a285f": {
+      "logId": "log_00f13c9a285f",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:19.227Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_00f13c9a285f"
+    },
+    "log_b4ba5d947b2c": {
+      "logId": "log_b4ba5d947b2c",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:44.599Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_b4ba5d947b2c"
+    },
+    "log_33af84ae2eaf": {
+      "logId": "log_33af84ae2eaf",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:46.207Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_33af84ae2eaf"
+    },
+    "log_7d8fa42445fc": {
+      "logId": "log_7d8fa42445fc",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:47.413Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_7d8fa42445fc"
+    },
+    "log_7925b79cbe4f": {
+      "logId": "log_7925b79cbe4f",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:48.537Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_7925b79cbe4f"
+    },
+    "log_b925d5513006": {
+      "logId": "log_b925d5513006",
+      "action": "User Login",
+      "performedBy": "375613",
+      "role": "principal",
+      "targetType": "user",
+      "targetId": "375613",
+      "timestamp": "2026-09-23T17:21:49.907Z",
+      "details": {
+        "message": "Authenticated login for Deepak Gehlot (principal)"
+      },
+      "_id": "log_b925d5513006"
     }
   },
   "schoolSettings": {
     "school": {
-      "schoolAddress": "गरोडा",
-      "principalUid": "375613",
-      "updatedAt": "2026-09-23T11:28:29.379785Z",
-      "createdAt": "2026-09-23T11:28:29.379785Z",
       "principalEmail": "deepak.lohar9826@gmail.com",
       "principalMobile": "+919826613340",
-      "principalName": "दीपक गहलोत",
+      "schoolAddress": "गरोडा",
+      "createdAt": "2026-09-23T11:28:29.379785Z",
+      "updatedAt": "2026-09-23T11:28:29.379785Z",
       "schoolName": "संस्कार हाई स्कूल, गरोडा",
+      "principalUid": "375613",
+      "principalName": "दीपक गहलोत",
       "_id": "school"
     }
-  }
+  },
+  "attendanceSessions": {}
 }

@@ -1,5 +1,6 @@
 /**
  * Principal Portal Controller
+ * Fully sanitized against stored and DOM-based XSS
  */
 
 const PrincipalApp = {
@@ -9,7 +10,9 @@ const PrincipalApp = {
 
   async init() {
     this.currentUser = API.getStoredUser();
-    if (!this.currentUser || this.currentUser.role !== "principal") {
+    const token = API.getStoredToken();
+    if (!this.currentUser || this.currentUser.role !== "principal" || !token) {
+      API.clearStoredUser();
       window.location.href = "/login";
       return;
     }
@@ -32,12 +35,12 @@ const PrincipalApp = {
     const overlay = document.getElementById("sidebarOverlay");
 
     toggleBtn?.addEventListener("click", () => {
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
+      sidebar?.classList.toggle("active");
+      overlay?.classList.toggle("active");
     });
     overlay?.addEventListener("click", () => {
-      sidebar.classList.remove("active");
-      overlay.classList.remove("active");
+      sidebar?.classList.remove("active");
+      overlay?.classList.remove("active");
     });
 
     // Logout
@@ -164,20 +167,28 @@ const PrincipalApp = {
       document.getElementById("statTodayTeacherAtt").textContent = `${tPres}/${s.totalTeachers}`;
       document.getElementById("statTodayTeacherAttSub").textContent = `${tTotal} marked today (${tPres} Present, ${s.todayTeacherAttendance.absent} Absent)`;
 
-      // Recent Audits
+      // Recent Audits with XSS Protection
       const auditList = document.getElementById("recentAuditLogsList");
       if (auditList) {
         if (!res.recentAudits || res.recentAudits.length === 0) {
           auditList.innerHTML = `<tr><td colspan="4" class="text-center" style="padding:1.5rem;color:#64748B;">No recent activity logs.</td></tr>`;
         } else {
-          auditList.innerHTML = res.recentAudits.map(a => `
-            <tr>
-              <td><span class="badge badge-neutral">${a.action || "Action"}</span></td>
-              <td><strong>${a.details || "-"}</strong></td>
-              <td>${a.performedBy || "System"} (${a.role || "-"})</td>
-              <td style="color:#64748B;font-size:0.825rem;">${a.timestamp ? a.timestamp.replace("T", " ").slice(0, 16) : "-"}</td>
-            </tr>
-          `).join("");
+          auditList.innerHTML = res.recentAudits.map(a => {
+            let detailsStr = "-";
+            if (a.details && typeof a.details === "object") {
+              detailsStr = a.details.message || JSON.stringify(a.details);
+            } else if (a.details) {
+              detailsStr = String(a.details);
+            }
+            return `
+              <tr>
+                <td><span class="badge badge-neutral">${escapeHtml(a.action || "Action")}</span></td>
+                <td><strong>${escapeHtml(detailsStr)}</strong></td>
+                <td>${escapeHtml(a.performedBy || "System")} (${escapeHtml(a.role || "-")})</td>
+                <td style="color:#64748B;font-size:0.825rem;">${escapeHtml(a.timestamp ? a.timestamp.replace("T", " ").slice(0, 16) : "-")}</td>
+              </tr>
+            `;
+          }).join("");
         }
       }
     } catch (err) {
@@ -204,19 +215,19 @@ const PrincipalApp = {
 
       tbody.innerHTML = res.students.map(s => `
         <tr>
-          <td><strong>${s.rollNumber}</strong></td>
-          <td><strong>${s.name}</strong></td>
-          <td><code>${s.studentId}</code></td>
-          <td><span class="badge badge-primary">${s.className}</span></td>
+          <td><strong>${escapeHtml(s.rollNumber)}</strong></td>
+          <td><strong>${escapeHtml(s.name)}</strong></td>
+          <td><code>${escapeHtml(s.studentId)}</code></td>
+          <td><span class="badge badge-primary">${escapeHtml(s.className)}</span></td>
           <td>
             <span class="badge ${s.status === 'active' ? 'badge-success' : 'badge-danger'}">
-              ${s.status}
+              ${escapeHtml(s.status)}
             </span>
           </td>
           <td>
             <div style="display:flex;gap:0.4rem;">
-              <button class="btn btn-secondary btn-sm" onclick="PrincipalApp.openEditStudentModal('${s.studentId}')">Edit</button>
-              <button class="btn btn-sm ${s.status === 'active' ? 'btn-danger' : 'btn-success'}" onclick="PrincipalApp.toggleStudentStatus('${s.studentId}', '${s.status === 'active' ? 'inactive' : 'active'}')">
+              <button class="btn btn-secondary btn-sm" onclick="PrincipalApp.openEditStudentModal('${escapeHtml(s.studentId)}')">Edit</button>
+              <button class="btn btn-sm ${s.status === 'active' ? 'btn-danger' : 'btn-success'}" onclick="PrincipalApp.toggleStudentStatus('${escapeHtml(s.studentId)}', '${s.status === 'active' ? 'inactive' : 'active'}')">
                 ${s.status === 'active' ? 'Deactivate' : 'Activate'}
               </button>
             </div>
@@ -224,7 +235,7 @@ const PrincipalApp = {
         </tr>
       `).join("");
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load students: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load students: ${escapeHtml(err.message)}</td></tr>`;
     }
   },
 
@@ -249,7 +260,7 @@ const PrincipalApp = {
       this.loadStudents();
       this.loadDashboardStats();
     } catch (err) {
-      Toast.error(err.message || "Failed to add student.");
+      Toast.error(err.message);
     }
   },
 
@@ -259,7 +270,6 @@ const PrincipalApp = {
       const student = res.students?.find(s => s.studentId === studentId);
       if (!student) throw new Error("Student not found.");
 
-      document.getElementById("editStuIdDisplay").value = student.studentId;
       document.getElementById("editStuIdHidden").value = student.studentId;
       document.getElementById("editStuName").value = student.name;
       document.getElementById("editStuRoll").value = student.rollNumber;
@@ -283,19 +293,19 @@ const PrincipalApp = {
 
     try {
       await API.put(`/api/students/${studentId}`, { name, rollNumber, classId, status });
-      Toast.success("Student updated successfully!");
+      Toast.success("Student details updated successfully!");
       Modal.close("editStudentModal");
       this.loadStudents();
     } catch (err) {
-      Toast.error(err.message || "Failed to update student.");
+      Toast.error(err.message);
     }
   },
 
   async toggleStudentStatus(studentId, newStatus) {
-    if (!confirm(`Are you sure you want to mark this student as ${newStatus}?`)) return;
+    if (!confirm(`Are you sure you want to change this student status to ${newStatus}?`)) return;
     try {
       await API.patch(`/api/students/${studentId}/status`, { status: newStatus });
-      Toast.success(`Student status updated to ${newStatus}.`);
+      Toast.success(`Student marked as ${newStatus}.`);
       this.loadStudents();
       this.loadDashboardStats();
     } catch (err) {
@@ -305,7 +315,7 @@ const PrincipalApp = {
 
   // ================= 3. TEACHERS ================= //
   async loadTeachers() {
-    const q = document.getElementById("searchTeacherQuery")?.value || "";
+    const q = document.getElementById("searchTeacherQ")?.value || "";
     const status = document.getElementById("filterTeacherStatus")?.value || "";
 
     const tbody = document.getElementById("teachersTableBody");
@@ -320,28 +330,19 @@ const PrincipalApp = {
 
       tbody.innerHTML = res.teachers.map(t => `
         <tr>
-          <td>
-            <div style="display:inline-flex;align-items:center;gap:0.4rem;">
-              <span class="badge" style="background:#EEF2FF;color:#4F46E5;font-size:0.95rem;font-weight:800;letter-spacing:1px;padding:0.3rem 0.6rem;border:1px solid #C7D2FE;font-family:monospace;">
-                ${t.teacherCode}
-              </span>
-              <button class="btn btn-secondary btn-sm" title="Copy UID" onclick="navigator.clipboard.writeText('${t.teacherCode}'); Toast.success('Teacher UID ${t.teacherCode} copied!');" style="padding:0.15rem 0.4rem;font-size:0.75rem;line-height:1;">
-                📋
-              </button>
-            </div>
-          </td>
-          <td><strong>${t.name}</strong></td>
-          <td>${t.mobileNumber}</td>
+          <td><code style="color:var(--primary);font-weight:700;">${escapeHtml(t.teacherCode)}</code></td>
+          <td><strong>${escapeHtml(t.name)}</strong></td>
+          <td>${escapeHtml(t.mobileNumber)}</td>
           <td>
             <span class="badge ${t.status === 'active' ? 'badge-success' : 'badge-danger'}">
-              ${t.status}
+              ${escapeHtml(t.status)}
             </span>
           </td>
           <td>
             <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-              <button class="btn btn-secondary btn-sm" onclick="PrincipalApp.openEditTeacherModal('${t.uid}')">Edit</button>
-              <button class="btn btn-warning btn-sm" onclick="PrincipalApp.openChangeTeacherPasswordModal('${t.uid}', '${t.name}')">Change Password</button>
-              <button class="btn btn-sm ${t.status === 'active' ? 'btn-danger' : 'btn-success'}" onclick="PrincipalApp.toggleTeacherStatus('${t.uid}', '${t.status === 'active' ? 'inactive' : 'active'}')">
+              <button class="btn btn-secondary btn-sm" onclick="PrincipalApp.openEditTeacherModal('${escapeHtml(t.uid)}')">Edit</button>
+              <button class="btn btn-sm btn-secondary" onclick="PrincipalApp.openChangeTeacherPasswordModal('${escapeHtml(t.uid)}', '${escapeHtml(t.name)}')">Change Password</button>
+              <button class="btn btn-sm ${t.status === 'active' ? 'btn-danger' : 'btn-success'}" onclick="PrincipalApp.toggleTeacherStatus('${escapeHtml(t.uid)}', '${t.status === 'active' ? 'inactive' : 'active'}')">
                 ${t.status === 'active' ? 'Deactivate' : 'Activate'}
               </button>
             </div>
@@ -349,7 +350,7 @@ const PrincipalApp = {
         </tr>
       `).join("");
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load teachers: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load teachers: ${escapeHtml(err.message)}</td></tr>`;
     }
   },
 
@@ -368,9 +369,9 @@ const PrincipalApp = {
     try {
       const res = await API.get("/api/teachers/generate-uid");
       document.getElementById("newTeacherCodeDisplay").value = res.teacherCode;
-      Toast.info(`नया UID जनरेट हुआ: ${res.teacherCode}`);
+      Toast.info(`Generated new Teacher UID: ${res.teacherCode}`);
     } catch (e) {
-      Toast.error("UID जनरेट करने में त्रुटि आई।");
+      Toast.error("Failed to generate UID.");
     }
   },
 
@@ -390,7 +391,7 @@ const PrincipalApp = {
     }
 
     try {
-      const res = await API.post("/api/teachers", { 
+      await API.post("/api/teachers", { 
         teacherCode, 
         name, 
         mobileNumber, 
@@ -399,7 +400,7 @@ const PrincipalApp = {
         repeatPassword, 
         status 
       });
-      Toast.success(`टीचर सफलतापूर्वक पंजीकृत! UID: ${teacherCode}`, 6000);
+      Toast.success(`Teacher registered successfully! UID: ${teacherCode}`, 6000);
       Modal.close("addTeacherModal");
       await this.loadInitialData();
       this.loadTeachers();
@@ -464,7 +465,7 @@ const PrincipalApp = {
     }
 
     try {
-      const res = await API.post(`/api/teachers/${uid}/password`, { newPassword, repeatPassword });
+      const res = await API.post(`/api/teachers/${uid}/reset-password`, { newPassword, repeatPassword });
       Toast.success(res.message || "Teacher password updated successfully!");
       Modal.close("adminChangeTeacherPassModal");
     } catch (err) {
@@ -492,36 +493,37 @@ const PrincipalApp = {
 
     try {
       const res = await API.get("/api/classes-and-subjects");
-      if (!res.data || res.data.length === 0) {
+      const list = res.classes || res.data || [];
+      if (list.length === 0) {
         container.innerHTML = `<div class="card" style="text-align:center;color:#64748B;">No classes configured. Click "Add Class" to get started.</div>`;
         return;
       }
 
-      container.innerHTML = res.data.map(c => `
+      container.innerHTML = list.map(c => `
         <div class="card" style="margin-bottom:1.5rem;">
           <div class="card-header">
             <div>
               <h3 style="display:flex;align-items:center;gap:0.5rem;">
-                ${c.className}
-                <span class="badge ${c.status === 'active' ? 'badge-success' : 'badge-neutral'}">${c.status}</span>
+                ${escapeHtml(c.className)}
+                <span class="badge ${c.status === 'active' ? 'badge-success' : 'badge-neutral'}">${escapeHtml(c.status)}</span>
               </h3>
-              <p style="font-size:0.85rem;margin-top:0.25rem;">${c.subjects.length} Subjects Configured</p>
+              <p style="font-size:0.85rem;margin-top:0.25rem;">${c.subjects ? c.subjects.length : 0} Subjects Configured</p>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="PrincipalApp.openAddSubjectModal('${c.classId}', '${c.className}')">
-              + Add Subject to ${c.className}
+            <button class="btn btn-secondary btn-sm" onclick="PrincipalApp.openAddSubjectModal('${escapeHtml(c.classId)}', '${escapeHtml(c.className)}')">
+              + Add Subject to ${escapeHtml(c.className)}
             </button>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
-            ${c.subjects.length > 0 ? c.subjects.map(s => `
+            ${c.subjects && c.subjects.length > 0 ? c.subjects.map(s => `
               <div style="background:#F1F5F9;border:1px solid #CBD5E1;border-radius:var(--radius-sm);padding:0.4rem 0.85rem;display:flex;align-items:center;gap:0.5rem;font-weight:600;font-size:0.875rem;">
-                <span>${s.subjectName}</span>
+                <span>${escapeHtml(s.subjectName)}</span>
               </div>
             `).join("") : `<span style="color:#94A3B8;font-style:italic;">No subjects added yet.</span>`}
           </div>
         </div>
       `).join("");
     } catch (err) {
-      container.innerHTML = `<div class="card" style="color:var(--danger);">Failed to load classes: ${err.message}</div>`;
+      container.innerHTML = `<div class="card" style="color:var(--danger);">Failed to load classes: ${escapeHtml(err.message)}</div>`;
     }
   },
 
@@ -583,13 +585,13 @@ const PrincipalApp = {
 
       tbody.innerHTML = res.assignments.map(a => `
         <tr>
-          <td><strong>${a.teacherName}</strong> <span style="color:#64748B;font-size:0.8rem;">(${a.teacherCode})</span></td>
-          <td><span class="badge badge-primary">${a.className}</span></td>
-          <td><strong>${a.subjectName}</strong></td>
-          <td><span class="badge ${a.status === 'active' ? 'badge-success' : 'badge-danger'}">${a.status}</span></td>
+          <td><strong>${escapeHtml(a.teacherName)}</strong> <span style="color:#64748B;font-size:0.8rem;">(${escapeHtml(a.teacherCode)})</span></td>
+          <td><span class="badge badge-primary">${escapeHtml(a.className)}</span></td>
+          <td><strong>${escapeHtml(a.subjectName)}</strong></td>
+          <td><span class="badge ${a.status === 'active' ? 'badge-success' : 'badge-danger'}">${escapeHtml(a.status)}</span></td>
           <td>
             ${a.status === 'active' ? `
-              <button class="btn btn-danger btn-sm" onclick="PrincipalApp.removeAssignment('${a.assignmentId}')">
+              <button class="btn btn-danger btn-sm" onclick="PrincipalApp.removeAssignment('${escapeHtml(a.assignmentId)}')">
                 Remove Assignment
               </button>
             ` : `<span style="color:#94A3B8;">Inactive</span>`}
@@ -597,7 +599,7 @@ const PrincipalApp = {
         </tr>
       `).join("");
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load assignments: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load assignments: ${escapeHtml(err.message)}</td></tr>`;
     }
   },
 
@@ -622,7 +624,7 @@ const PrincipalApp = {
       }
       subSelect.disabled = false;
       subSelect.innerHTML = '<option value="">-- Select Subject --</option>' + res.subjects.map(s => `
-        <option value="${s.subjectId || s._id}">${s.subjectName}</option>
+        <option value="${escapeHtml(s.subjectId || s._id)}">${escapeHtml(s.subjectName)}</option>
       `).join("");
     } catch (err) {
       subSelect.innerHTML = '<option value="">Error loading subjects</option>';
@@ -688,25 +690,25 @@ const PrincipalApp = {
 
       tbody.innerHTML = res.records.map(r => `
         <tr>
-          <td><strong>${r.date}</strong></td>
-          <td>${r.period}</td>
-          <td><strong>${r.rollNumber}</strong></td>
-          <td>${r.studentName}</td>
-          <td><span class="badge badge-primary">${r.className}</span></td>
-          <td>${r.subjectName}</td>
+          <td><strong>${escapeHtml(r.date)}</strong></td>
+          <td>${escapeHtml(r.period)}</td>
+          <td><strong>${escapeHtml(r.rollNumber)}</strong></td>
+          <td>${escapeHtml(r.studentName)}</td>
+          <td><span class="badge badge-primary">${escapeHtml(r.className)}</span></td>
+          <td>${escapeHtml(r.subjectName)}</td>
           <td>
             <span class="badge ${r.status === 'Present' ? 'badge-success' : 'badge-danger'}">
-              ${r.status}
+              ${escapeHtml(r.status)}
             </span>
           </td>
-          <td>${r.teacherName}</td>
+          <td>${escapeHtml(r.teacherName)}</td>
           <td>
             ${r.locked ? `<span class="badge badge-warning">Locked</span>` : `<span class="badge badge-neutral">Open</span>`}
           </td>
         </tr>
       `).join("");
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="9" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load records: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load records: ${escapeHtml(err.message)}</td></tr>`;
     }
   },
 
@@ -789,7 +791,7 @@ const PrincipalApp = {
     tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="padding:2rem;"><div class="spinner spinner-dark" style="margin:0 auto;"></div></td></tr>`;
 
     try {
-      const res = await API.get("/api/attendance/teacher", { dateFrom, dateTo, status, name });
+      const res = await API.get("/api/attendance/teacher-records", { dateFrom, dateTo, status, teacherName: name });
       if (!res.records || res.records.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="padding:2rem;color:#64748B;">No teacher attendance records found.</td></tr>`;
         return;
@@ -797,19 +799,19 @@ const PrincipalApp = {
 
       tbody.innerHTML = res.records.map(r => `
         <tr>
-          <td><strong>${r.date}</strong></td>
-          <td><code style="color:var(--primary);font-weight:700;">${r.teacherCode}</code></td>
-          <td><strong>${r.teacherName}</strong></td>
+          <td><strong>${escapeHtml(r.date)}</strong></td>
+          <td><code style="color:var(--primary);font-weight:700;">${escapeHtml(r.teacherCode)}</code></td>
+          <td><strong>${escapeHtml(r.teacherName)}</strong></td>
           <td>
             <span class="badge ${r.status === 'Present' ? 'badge-success' : 'badge-danger'}">
-              ${r.status}
+              ${escapeHtml(r.status)}
             </span>
           </td>
-          <td>${r.markedBy || "Principal"}</td>
+          <td>${escapeHtml(r.markedBy || "Principal")}</td>
         </tr>
       `).join("");
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load teacher attendance: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--danger);padding:1.5rem;">Failed to load teacher attendance: ${escapeHtml(err.message)}</td></tr>`;
     }
   },
 
@@ -841,14 +843,12 @@ const PrincipalApp = {
     this.populateClassDropdowns();
     this.populateTeacherDropdowns();
 
-    // Set default year to current year
     const currYear = new Date().getFullYear();
     const yearSelects = document.querySelectorAll(".report-year-select");
     yearSelects.forEach(s => {
       s.value = currYear.toString();
     });
 
-    // Populate students dropdown when class changes in report
     document.getElementById("reportStudentClass")?.addEventListener("change", async (e) => {
       const classId = e.target.value;
       const stuSelect = document.getElementById("reportStudentSelect");
@@ -861,7 +861,7 @@ const PrincipalApp = {
       try {
         const res = await API.get("/api/students", { classId });
         stuSelect.innerHTML = '<option value="">All Students</option>' + (res.students || []).map(s => `
-          <option value="${s.studentId}">${s.rollNumber}. ${s.name}</option>
+          <option value="${escapeHtml(s.studentId)}">${escapeHtml(s.rollNumber)}. ${escapeHtml(s.name)}</option>
         `).join("");
       } catch (err) {
         stuSelect.innerHTML = '<option value="">All Students</option>';
@@ -881,26 +881,15 @@ const PrincipalApp = {
     btn.innerHTML = `<div class="spinner"></div> Generating Excel...`;
 
     try {
-      const response = await fetch("/api/reports/students/excel", {
+      const downloadRes = await API.request("/api/reports/students/excel", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: "principal",
-          principalUid: this.currentUser.uid,
-          year, month, classId, subjectId, studentId
-        })
+        body: JSON.stringify({ year, month, classId, subjectId, studentId })
       });
 
-      if (!response.ok) {
-        const errJson = await response.json();
-        throw new Error(errJson.message || "Failed to generate report.");
-      }
-
-      const blob = await response.blob();
-      const contentDisp = response.headers.get("Content-Disposition");
+      const blob = downloadRes.blob;
       let filename = `Attendance_Students_${year}.xlsx`;
-      if (contentDisp && contentDisp.includes("filename=")) {
-        filename = contentDisp.split("filename=")[1].replace(/"/g, "").trim();
+      if (downloadRes.filename && downloadRes.filename.includes("filename=")) {
+        filename = downloadRes.filename.split("filename=")[1].replace(/"/g, "").trim();
       }
 
       const url = window.URL.createObjectURL(blob);
@@ -914,7 +903,7 @@ const PrincipalApp = {
 
       Toast.success("Student Excel report downloaded successfully!");
     } catch (err) {
-      Toast.error(err.message);
+      Toast.error(err.message || "Failed to generate report.");
     } finally {
       btn.disabled = false;
       btn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download Student Attendance Excel`;
@@ -931,26 +920,15 @@ const PrincipalApp = {
     btn.innerHTML = `<div class="spinner"></div> Generating Excel...`;
 
     try {
-      const response = await fetch("/api/reports/teachers/excel", {
+      const downloadRes = await API.request("/api/reports/teachers/excel", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: "principal",
-          principalUid: this.currentUser.uid,
-          year, month, teacherUid
-        })
+        body: JSON.stringify({ year, month, teacherUid })
       });
 
-      if (!response.ok) {
-        const errJson = await response.json();
-        throw new Error(errJson.message || "Failed to generate report.");
-      }
-
-      const blob = await response.blob();
-      const contentDisp = response.headers.get("Content-Disposition");
+      const blob = downloadRes.blob;
       let filename = `Attendance_Teachers_${year}.xlsx`;
-      if (contentDisp && contentDisp.includes("filename=")) {
-        filename = contentDisp.split("filename=")[1].replace(/"/g, "").trim();
+      if (downloadRes.filename && downloadRes.filename.includes("filename=")) {
+        filename = downloadRes.filename.split("filename=")[1].replace(/"/g, "").trim();
       }
 
       const url = window.URL.createObjectURL(blob);
@@ -964,7 +942,7 @@ const PrincipalApp = {
 
       Toast.success("Teacher Excel report downloaded successfully!");
     } catch (err) {
-      Toast.error(err.message);
+      Toast.error(err.message || "Failed to generate report.");
     } finally {
       btn.disabled = false;
       btn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Download Teacher Attendance Excel`;
@@ -997,7 +975,6 @@ const PrincipalApp = {
 
     try {
       await API.post("/api/auth/change-password", {
-        uid: this.currentUser.uid,
         currentPassword,
         newPassword,
         repeatPassword
@@ -1010,7 +987,6 @@ const PrincipalApp = {
   },
 
   setupModals() {
-    // Close modal on overlay click or close button
     document.querySelectorAll(".modal-overlay").forEach(overlay => {
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) {

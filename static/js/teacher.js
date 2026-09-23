@@ -1,5 +1,6 @@
 /**
  * Teacher Portal Controller
+ * Fully sanitized against stored and DOM-based XSS
  */
 
 const TeacherApp = {
@@ -10,7 +11,9 @@ const TeacherApp = {
 
   async init() {
     this.currentUser = API.getStoredUser();
-    if (!this.currentUser || this.currentUser.role !== "teacher") {
+    const token = API.getStoredToken();
+    if (!this.currentUser || this.currentUser.role !== "teacher" || !token) {
+      API.clearStoredUser();
       window.location.href = "/login";
       return;
     }
@@ -33,12 +36,12 @@ const TeacherApp = {
     const overlay = document.getElementById("sidebarOverlay");
 
     toggleBtn?.addEventListener("click", () => {
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
+      sidebar?.classList.toggle("active");
+      overlay?.classList.toggle("active");
     });
     overlay?.addEventListener("click", () => {
-      sidebar.classList.remove("active");
-      overlay.classList.remove("active");
+      sidebar?.classList.remove("active");
+      overlay?.classList.remove("active");
     });
 
     // Logout
@@ -97,10 +100,7 @@ const TeacherApp = {
 
   async loadMyAssignments() {
     try {
-      const res = await API.get("/api/assignments", {
-        teacherUid: this.currentUser.uid,
-        status: "active"
-      });
+      const res = await API.get("/api/assignments", { status: "active" });
       this.myAssignments = res.assignments || [];
       this.populateClassDropdown();
     } catch (e) {
@@ -123,11 +123,13 @@ const TeacherApp = {
 
     let optionsHtml = '<option value="">-- Select Assigned Class --</option>';
     classMap.forEach((name, id) => {
-      optionsHtml += `<option value="${id}">${name}</option>`;
+      optionsHtml += `<option value="${escapeHtml(id)}">${escapeHtml(name)}</option>`;
     });
 
     classSelect.innerHTML = optionsHtml;
-    if (filterClassSelect) filterClassSelect.innerHTML = '<option value="">All My Classes</option>' + optionsHtml.replace('<option value="">-- Select Assigned Class --</option>', '');
+    if (filterClassSelect) {
+      filterClassSelect.innerHTML = '<option value="">All My Classes</option>' + optionsHtml.replace('<option value="">-- Select Assigned Class --</option>', '');
+    }
   },
 
   handleClassSelectionChange() {
@@ -151,16 +153,14 @@ const TeacherApp = {
 
     subSelect.disabled = false;
     subSelect.innerHTML = '<option value="">-- Select Assigned Subject --</option>' + validSubjects.map(s => `
-      <option value="${s.subjectId}">${s.subjectName}</option>
+      <option value="${escapeHtml(s.subjectId)}">${escapeHtml(s.subjectName)}</option>
     `).join("");
   },
 
   // ================= 1. DASHBOARD STATS ================= //
   async loadDashboardStats() {
     try {
-      const res = await API.get("/api/dashboard/teacher-stats", {
-        teacherUid: this.currentUser.uid
-      });
+      const res = await API.get("/api/dashboard/teacher-stats");
 
       document.getElementById("statMyClassesCount").textContent = res.classesCount || 0;
       document.getElementById("statMyAssignmentsCount").textContent = res.assignedCount || 0;
@@ -180,10 +180,10 @@ const TeacherApp = {
           listContainer.innerHTML = res.assignments.map(a => `
             <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:var(--radius-md);padding:0.85rem 1rem;display:flex;align-items:center;justify-content:space-between;">
               <div>
-                <strong style="font-size:0.95rem;color:var(--dark-bg);">${a.className}</strong>
-                <div style="font-size:0.825rem;color:var(--primary);font-weight:600;margin-top:0.2rem;">${a.subjectName}</div>
+                <strong style="font-size:0.95rem;color:var(--dark-bg);">${escapeHtml(a.className)}</strong>
+                <div style="font-size:0.825rem;color:var(--primary);font-weight:600;margin-top:0.2rem;">${escapeHtml(a.subjectName)}</div>
               </div>
-              <button class="btn btn-primary btn-sm" onclick="TeacherApp.quickMarkAttendance('${a.classId}', '${a.subjectId}')">
+              <button class="btn btn-primary btn-sm" onclick="TeacherApp.quickMarkAttendance('${escapeHtml(a.classId)}', '${escapeHtml(a.subjectId)}')">
                 Mark Attendance
               </button>
             </div>
@@ -227,9 +227,7 @@ const TeacherApp = {
 
     try {
       const res = await API.get("/api/attendance/session", {
-        classId, subjectId, date: dateStr, period,
-        uid: this.currentUser.uid,
-        role: "teacher"
+        classId, subjectId, date: dateStr, period
       });
 
       this.isCurrentSessionLocked = res.isLocked;
@@ -254,7 +252,7 @@ const TeacherApp = {
       document.getElementById("sessionStudentCount").textContent = `${this.activeStudentsList.length} Students`;
       this.renderAttendanceTable();
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="color:var(--danger);padding:2rem;">${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="color:var(--danger);padding:2rem;">${escapeHtml(err.message)}</td></tr>`;
     }
   },
 
@@ -264,10 +262,10 @@ const TeacherApp = {
 
     tbody.innerHTML = this.activeStudentsList.map((s, idx) => `
       <tr>
-        <td><strong style="font-size:1.05rem;">${s.rollNumber}</strong></td>
+        <td><strong style="font-size:1.05rem;">${escapeHtml(s.rollNumber)}</strong></td>
         <td>
-          <div style="font-weight:600;font-size:0.95rem;">${s.name}</div>
-          <div style="font-size:0.775rem;color:#64748B;">ID: ${s.studentId}</div>
+          <div style="font-weight:600;font-size:0.95rem;">${escapeHtml(s.name)}</div>
+          <div style="font-size:0.775rem;color:#64748B;">ID: ${escapeHtml(s.studentId)}</div>
         </td>
         <td>
           <div class="radio-group-attendance">
@@ -287,7 +285,7 @@ const TeacherApp = {
         </td>
         <td>
           <span class="badge ${s.status === 'Present' ? 'badge-success' : 'badge-danger'}">
-            ${s.status}
+            ${escapeHtml(s.status)}
           </span>
         </td>
       </tr>
@@ -339,9 +337,7 @@ const TeacherApp = {
         subjectId,
         date: dateStr,
         period,
-        teacherUid: this.currentUser.uid,
-        attendance: records,
-        role: "teacher"
+        records
       });
 
       Toast.success(res.message || "Attendance saved successfully!");
@@ -367,9 +363,7 @@ const TeacherApp = {
 
     try {
       const res = await API.get("/api/attendance/student-records", {
-        classId, dateFrom, dateTo, status, studentName,
-        uid: this.currentUser.uid,
-        role: "teacher"
+        classId, dateFrom, dateTo, status, studentName
       });
 
       if (!res.records || res.records.length === 0) {
@@ -379,21 +373,21 @@ const TeacherApp = {
 
       tbody.innerHTML = res.records.map(r => `
         <tr>
-          <td><strong>${r.date}</strong></td>
-          <td>${r.period}</td>
-          <td><strong>${r.rollNumber}</strong></td>
-          <td>${r.studentName}</td>
-          <td><span class="badge badge-primary">${r.className}</span></td>
-          <td>${r.subjectName}</td>
+          <td><strong>${escapeHtml(r.date)}</strong></td>
+          <td>${escapeHtml(r.period)}</td>
+          <td><strong>${escapeHtml(r.rollNumber)}</strong></td>
+          <td>${escapeHtml(r.studentName)}</td>
+          <td><span class="badge badge-primary">${escapeHtml(r.className)}</span></td>
+          <td>${escapeHtml(r.subjectName)}</td>
           <td>
             <span class="badge ${r.status === 'Present' ? 'badge-success' : 'badge-danger'}">
-              ${r.status}
+              ${escapeHtml(r.status)}
             </span>
           </td>
         </tr>
       `).join("");
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color:var(--danger);padding:1.5rem;">${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color:var(--danger);padding:1.5rem;">${escapeHtml(err.message)}</td></tr>`;
     }
   },
 
@@ -422,7 +416,6 @@ const TeacherApp = {
 
     try {
       await API.post("/api/auth/change-password", {
-        uid: this.currentUser.uid,
         currentPassword,
         newPassword,
         repeatPassword

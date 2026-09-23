@@ -2,6 +2,18 @@
  * Attendance Management System - Central API Client & Utilities
  */
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+window.escapeHtml = escapeHtml;
+
 const API = {
   getStoredUser() {
     try {
@@ -16,15 +28,39 @@ const API = {
     localStorage.setItem("ams_user", JSON.stringify(user));
   },
 
+  getStoredToken() {
+    return localStorage.getItem("ams_token") || null;
+  },
+
+  setStoredToken(token) {
+    if (token) {
+      localStorage.setItem("ams_token", token);
+    } else {
+      localStorage.removeItem("ams_token");
+    }
+  },
+
   clearStoredUser() {
     localStorage.removeItem("ams_user");
+    localStorage.removeItem("ams_token");
   },
+
+  escapeHtml,
 
   async request(url, options = {}) {
     options.headers = options.headers || {};
     
-    // Attach user role & uid to query if GET or body if POST/PUT
+    // Attach cryptographically verified session token in Authorization header
+    const token = API.getStoredToken();
+    if (token) {
+      options.headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const user = API.getStoredUser();
+    if (user && user.uid) {
+      options.headers['X-User-UID'] = String(user.uid);
+      options.headers['X-User-Role'] = String(user.role || 'teacher');
+    }
     
     if (!(options.body instanceof FormData) && options.method && options.method !== 'GET') {
       options.headers['Content-Type'] = 'application/json';
@@ -33,7 +69,17 @@ const API = {
     try {
       const response = await fetch(url, options);
 
-      // Handle file download
+      // Handle session expiration
+      if (response.status === 401) {
+        const isAuthRoute = url.includes('/api/auth/login') || url.includes('/api/auth/reset-password') || url.includes('/api/auth/verify');
+        if (!isAuthRoute && (window.location.pathname.startsWith('/principal') || window.location.pathname.startsWith('/teacher'))) {
+          API.clearStoredUser();
+          window.location.replace('/login');
+          throw new Error('Your session has expired. Please sign in again.');
+        }
+      }
+
+      // Handle file download (e.g. Excel spreadsheet)
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("spreadsheetml.sheet")) {
         if (!response.ok) {
@@ -43,7 +89,7 @@ const API = {
         return { blob, filename: response.headers.get("content-disposition") };
       }
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) {
         throw new Error(data.message || `Request failed with status ${response.status}`);
       }
@@ -55,24 +101,20 @@ const API = {
   },
 
   async get(url, params = {}) {
-    const user = API.getStoredUser();
-    const queryParams = new URLSearchParams(params);
-    if (user) {
-      if (!queryParams.has("uid")) queryParams.append("uid", user.uid);
-      if (!queryParams.has("role")) queryParams.append("role", user.role);
+    const queryParams = new URLSearchParams();
+    for (const [key, val] of Object.entries(params)) {
+      if (val !== undefined && val !== null && val !== '') {
+        queryParams.append(key, String(val));
+      }
     }
     const queryString = queryParams.toString();
-    const fullUrl = queryString ? `${url}?${queryString}` : url;
+    if (!queryString) return API.request(url, { method: 'GET' });
+    const separator = url.includes('?') ? '&' : '?';
+    const fullUrl = `${url}${separator}${queryString}`;
     return API.request(fullUrl, { method: 'GET' });
   },
 
   async post(url, body = {}) {
-    const user = API.getStoredUser();
-    if (user && typeof body === 'object' && !(body instanceof FormData)) {
-      body.performedBy = body.performedBy || user.uid;
-      body.role = body.role || user.role;
-      body.uid = body.uid || user.uid;
-    }
     return API.request(url, {
       method: 'POST',
       body: JSON.stringify(body)
@@ -80,11 +122,6 @@ const API = {
   },
 
   async put(url, body = {}) {
-    const user = API.getStoredUser();
-    if (user && typeof body === 'object') {
-      body.performedBy = body.performedBy || user.uid;
-      body.role = body.role || user.role;
-    }
     return API.request(url, {
       method: 'PUT',
       body: JSON.stringify(body)
@@ -92,11 +129,6 @@ const API = {
   },
 
   async patch(url, body = {}) {
-    const user = API.getStoredUser();
-    if (user && typeof body === 'object') {
-      body.performedBy = body.performedBy || user.uid;
-      body.role = body.role || user.role;
-    }
     return API.request(url, {
       method: 'PATCH',
       body: JSON.stringify(body)
@@ -104,19 +136,22 @@ const API = {
   },
 
   async delete(url, params = {}) {
-    const user = API.getStoredUser();
-    const queryParams = new URLSearchParams(params);
-    if (user) {
-      queryParams.append("performedBy", user.uid);
-      queryParams.append("role", user.role);
+    const queryParams = new URLSearchParams();
+    for (const [key, val] of Object.entries(params)) {
+      if (val !== undefined && val !== null && val !== '') {
+        queryParams.append(key, String(val));
+      }
     }
-    const fullUrl = `${url}?${queryParams.toString()}`;
+    const queryString = queryParams.toString();
+    if (!queryString) return API.request(url, { method: 'DELETE' });
+    const separator = url.includes('?') ? '&' : '?';
+    const fullUrl = `${url}${separator}${queryString}`;
     return API.request(fullUrl, { method: 'DELETE' });
   }
 };
 
 /**
- * Toast Notification System
+ * XSS-Safe Toast Notification System
  */
 const Toast = {
   container: null,
@@ -133,15 +168,27 @@ const Toast = {
     this.init();
     const toast = document.createElement("div");
     toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-      <span>${message}</span>
-      <button style="background:none;border:none;color:#fff;cursor:pointer;font-size:1.1rem;padding:0 0 0 8px;">&times;</button>
-    `;
+    
+    // Safely insert content using textContent to prevent reflected XSS
+    const textSpan = document.createElement("span");
+    textSpan.textContent = String(message || '');
+    
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "×";
+    closeBtn.style.background = "none";
+    closeBtn.style.border = "none";
+    closeBtn.style.color = "#fff";
+    closeBtn.style.cursor = "pointer";
+    closeBtn.style.fontSize = "1.2rem";
+    closeBtn.style.padding = "0 0 0 8px";
+    closeBtn.style.lineHeight = "1";
 
-    toast.querySelector("button").addEventListener("click", () => {
+    closeBtn.addEventListener("click", () => {
       toast.remove();
     });
 
+    toast.appendChild(textSpan);
+    toast.appendChild(closeBtn);
     this.container.appendChild(toast);
 
     setTimeout(() => {
